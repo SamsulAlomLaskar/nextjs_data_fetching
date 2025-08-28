@@ -7,11 +7,12 @@ type User = {
 };
 
 const UsersPage = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
   const users = await response.json();
   return (
     <>
-      <h1>Users Page</h1>
+      <h1 className="flex items-center">Users Page</h1>
       <div className="grid grid-cols-2 gap-2 p-4">
         {users.map((user: User) => (
           <div
