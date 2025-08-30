@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-
+export const revalidate = 20;
 // export const fetchCache = "default-cache";
 type Product = {
   id: number;
@@ -13,6 +13,9 @@ const ProductsPage = async () => {
 
   const response = await fetch("http://localhost:3001/products", {
     // cache: "no-store",
+    next: {
+      revalidate: 10,
+    },
   });
   const products = await response.json();
 
@@ -21,10 +24,10 @@ const ProductsPage = async () => {
   console.log("myCookie", theme);
 
   // next cookies won't cache any fetch requests after a dynamic(cookies/headers/searchParams) function has been invoked
-  const detailsResponse = await fetch("http://localhost:3001/products/1", {
-    cache: "no-store",
+  /*   const detailsResponse = await fetch("http://localhost:3001/products/1", {
+    // cache: "no-store",
   });
-  const details = await detailsResponse.json();
+  const details = await detailsResponse.json(); */
 
   return (
     <ul className="space-y-4 p-4">
@@ -36,7 +39,7 @@ const ProductsPage = async () => {
           <h2 className="text-xl font-semibold">{product.title}</h2>
           <p>{product.description}</p>
           <p className="text-lg font-medium">₹{product.price}</p>
-          <p>{details.price}</p>
+          {/* <p>{details.price}</p> */}
         </li>
       ))}
     </ul>
