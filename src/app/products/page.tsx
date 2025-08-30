@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+
+// export const fetchCache = "default-cache";
 type Product = {
   id: number;
   title: string;
@@ -7,8 +10,22 @@ type Product = {
 
 const ProductsPage = async () => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  const response = await fetch("http://localhost:3001/products");
+
+  const response = await fetch("http://localhost:3001/products", {
+    // cache: "no-store",
+  });
   const products = await response.json();
+
+  const cokkieStore = cookies();
+  const theme = cokkieStore.get("theme");
+  console.log("myCookie", theme);
+
+  // next cookies won't cache any fetch requests after a dynamic(cookies/headers/searchParams) function has been invoked
+  const detailsResponse = await fetch("http://localhost:3001/products/1", {
+    cache: "no-store",
+  });
+  const details = await detailsResponse.json();
+
   return (
     <ul className="space-y-4 p-4">
       {products.map((product: Product) => (
@@ -19,6 +36,7 @@ const ProductsPage = async () => {
           <h2 className="text-xl font-semibold">{product.title}</h2>
           <p>{product.description}</p>
           <p className="text-lg font-medium">₹{product.price}</p>
+          <p>{details.price}</p>
         </li>
       ))}
     </ul>
